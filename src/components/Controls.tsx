@@ -1,12 +1,11 @@
 import React from 'react';
 import { usePanel } from '../context/PanelContext';
 import { AnimatePresence, motion } from 'framer-motion';
-import { simulation } from '../physics/Simulation';
+import { simulation } from '../physics/simulation';
 
 
 const Controls: React.FC = () => {
     const { isVisible, setIsVisible } = usePanel();
-
 
     return (
         <>
@@ -33,6 +32,7 @@ const Controls: React.FC = () => {
                 {isVisible && (
                     <motion.div 
                         className="panel"
+                        onWheelCapture={(e) => e.stopPropagation()}
 
                         initial={{ opacity: 0, x: 100 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -49,42 +49,24 @@ const Controls: React.FC = () => {
                             </h2>
                         </div>
 
-                        <div>
-                            <h3 style={{ margin: 0 }}>
-                                Rocket
-                            </h3>
+                        <div style={{ overflowY: 'auto' }}>
+                            {simulation.getPlanets().map((planet, index) => (
+                                <div key={index} style={{ marginBottom: 32 }}>
+                                    <h3 style={{ margin: 0 }}>
+                                        {planet.getName()}
+                                    </h3>
 
-                            <div>
-                                <span style={{ width: 80 }}>Mass:</span>
-                                <input type="number" style={{ width: 80, marginLeft: 10 }} /> kg
-                            </div>
-                            <div>
-                                <span style={{ width: 80 }}>Thrust:</span>
-                                <input type="number" style={{ width: 80, marginLeft: 10 }} /> N
-                            </div>
-                            <div>
-                                <span style={{ width: 80 }}>Fuel Consumption:</span>
-                                <input type="number" style={{ width: 80, marginLeft: 10 }} /> kg/s
-                            </div>
-                            <div>
-                                <span style={{ width: 80 }}>Fuel:</span>
-                                <input type="number" style={{ width: 80, marginLeft: 10 }} /> kg
-                            </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 5 }}>
+                                        <span className='SubText'>Mass:</span>
+                                        <input className='InputText' type="number" min={1} value={planet.getMass()} onChange={(e) => planet.setMass(Number(e.target.value))} />
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 5 }}>
+                                        <span className='SubText'>Radius:</span>
+                                        <input className='InputText' type="number" min={1} value={planet.getRadius()} onChange={(e) => planet.setRadius(Number(e.target.value))} />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-
-                        <div>
-                            <h3>
-                                Planet
-                            </h3>
-                        </div>
-
-                        <div>
-                            <button onClick={() => simulation.play()}>play</button>
-                            <button onClick={() => simulation.restart()}>restart</button>
-                            <button>1x</button>
-                        </div>
-
-
                     </motion.div>
                 )}
             </AnimatePresence>

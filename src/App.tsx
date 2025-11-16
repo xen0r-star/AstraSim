@@ -1,11 +1,11 @@
 import Controls from './components/Controls'
-import RocketSim from './components/RocketSim'
+import MainGame from './components/MainGame'
 import { PanelProvider } from './provider/PanelProvider'
 
 function App() {
     return (
         <PanelProvider>
-            <RocketSim />
+            <MainGame />
             <Controls />
         </PanelProvider>
     )

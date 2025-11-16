@@ -15,8 +15,10 @@ export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: numb
 
     p.push();
     p.translate(px, py);
-
+    
     // Planet shading --------------
+    p.push();
+    p.rotate(p.PI / 4);
     for (let i = -planet.getRadius(), step = 0; i <= planet.getRadius(); i += 8, step++) {
         
         const lineLength = Math.sqrt(planet.getRadius() ** 2 - i ** 2) * 2;
@@ -31,6 +33,7 @@ export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: numb
 
         p.line(i, -lineLength / 2, i, lineLength / 2);
     }
+    p.pop();
 
     // Planet outline --------------
     p.fill(planet.getColor().r, planet.getColor().g, planet.getColor().b, 50);

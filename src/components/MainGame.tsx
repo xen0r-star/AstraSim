@@ -153,19 +153,30 @@ const MainGame: React.FC = () => {
                 }}
                 transition={{ duration: 0.3 }}
             >
-                <div 
-                    className='TextSecondary select-none' 
-                    style={{bottom: 35, right: 35, cursor: 'pointer'}} 
-                    onClick={() => { 
-                        zoom.current = 1; 
+                <div className='TextSecondary select-none' style={{ bottom: 35, right: 35 }}>
+                    <span style={{ cursor: 'pointer'}} onClick={() => {
                         offsetX.current = window.innerWidth / 2;
                         offsetY.current = window.innerHeight / 2;
-                        setZoomDisplay(1);
                         setOffsetXDisplay(0);
                         setOffsetYDisplay(0);
-                    }}
-                >
-                    x:{(-offsetXDisplay).toFixed(0)} y:{offsetYDisplay.toFixed(0)} | {zoomDisplay.toFixed(2)}x | {simulation.getTime().toFixed(2)} Years | {fpsDisplay.toFixed(0)} FPS
+                    }}>
+                        x:{(-offsetXDisplay).toFixed(0)} y:{offsetYDisplay.toFixed(0)}
+                    </span>
+                    <span> | </span>
+                    <span style={{ cursor: 'pointer'}} onClick={() => {
+                        zoom.current = 1; 
+                        setZoomDisplay(1);
+                    }}>
+                        {zoomDisplay.toFixed(2)}x
+                    </span>
+                    <span> | </span>
+                    <span>
+                        {simulation.getTime().toFixed(2)} Years
+                    </span>
+                    <span> | </span>
+                    <span>
+                        {fpsDisplay.toFixed(0)} FPS
+                    </span>
                 </div>
                 <div style={{ position: 'absolute', bottom: 60, right: 35, display: 'flex', gap: 10 }}>
                     <button onClick={() => simulation.setIsRunning(!simulation.getIsRunning())}>
@@ -182,7 +193,7 @@ const MainGame: React.FC = () => {
 
                     </button>
                     <button onClick={() => {
-                        simulation.setIsRunning(false)
+                        simulation.reset();
                     }}>
                         <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M320 146C320 146 344.36 134 256 134C224.355 134 193.421 143.384 167.109 160.965C140.797 178.546 120.289 203.534 108.179 232.771C96.0693 262.007 92.9008 294.177 99.0744 325.214C105.248 356.251 120.487 384.761 142.863 407.137C165.239 429.513 193.749 444.752 224.786 450.926C255.823 457.099 287.993 453.931 317.229 441.821C346.466 429.711 371.454 409.203 389.035 382.891C406.616 356.579 416 325.645 416 294" stroke="white" strokeWidth="32" strokeMiterlimit="10" strokeLinecap="round"/>

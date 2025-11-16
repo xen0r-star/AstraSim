@@ -6,11 +6,19 @@ import { setCircularOrbit } from "./orbitUtils";
 class Simulation {
     private planets: Planet[];
     private isRunning: boolean;
-    private timeScale: number = 1;
-    private time: number = 0;
+    private timeScale: number;
+    private time: number;
 
     constructor() {
-        this.planets = [];
+        this.planets = this.setupPlanets();
+
+        this.isRunning = true;
+        this.time = 0;
+        this.timeScale = 1;
+    }
+
+    setupPlanets() {
+        const planets = [];
         const sun = new Planet(0, 0, 20000, 40, 'Sun', {r: 255, g: 223, b: 0});
         const mercury = new Planet(200, 0, 50, 8, 'Mercury', {r: 169, g: 169, b: 169});
         const venus = new Planet(300, 0, 100, 14, 'Venus', {r: 218, g: 165, b: 32});
@@ -31,21 +39,27 @@ class Simulation {
         setCircularOrbit(uranus, sun, 0.1);
         setCircularOrbit(neptune, sun, 0.1);
 
-        this.planets.push(sun);
-        this.planets.push(mercury);
-        this.planets.push(venus);
-        this.planets.push(earth);
-        this.planets.push(mars);
-        this.planets.push(jupiter);
-        this.planets.push(saturn);
-        this.planets.push(uranus);
-        this.planets.push(neptune);
+        planets.push(sun);
+        planets.push(mercury);
+        planets.push(venus);
+        planets.push(earth);
+        planets.push(mars);
+        planets.push(jupiter);
+        planets.push(saturn);
+        planets.push(uranus);
+        planets.push(neptune);
 
-        this.isRunning = true;
+        return planets;
     }
 
     incrementTime() {
         this.time += 0.25 * this.timeScale;
+    }
+
+    reset() {
+        this.planets = this.setupPlanets();
+        this.time = 0;
+        this.timeScale = 1;
     }
 
     getIsRunning() { return this.isRunning; }

@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.select-none {
+  user-select: none;         /* Standard      */
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none;    /* Firefox       */
+  -ms-user-select: none;     /* IE/Edge       */
+}
+
+.TextSecondary {
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    font-family: monospace;
+}
+
+.TextPrimary {
+    position: absolute;
+    color: white;
+    font-size: 28px;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.TextBig {
+    position: absolute;
+    color: white;
+    font-size: 32px;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.TextTitle {
+    position: absolute;
+    color: white;
+    font-size: 42px;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+
+.panel {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: #ffffff88;
+    border: 5px solid #ffffff;
+    height: calc(100% - 60px);
+    width: 300px;
+    border-radius: 8px;
+    padding: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}

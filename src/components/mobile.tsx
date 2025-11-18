@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, } from 'react';
+import React, { useRef, useEffect } from 'react';
 import p5 from 'p5';
 import { drawGrid } from '../draw/DrawHUD';
 import { drawBorder } from '../draw/DrawHUD';

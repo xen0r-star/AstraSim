@@ -3,7 +3,8 @@ import type { DataPlanet } from "../types/dataPlanet";
 import rawData from "./dataPlanet.json" assert { type: "json" };
 import { computeOrbitalState, alignToBarycenter } from "./orbitUtils";
 import { computeAccelerations, velocityVerletStep } from "./gravity";
-import { hexToRgb } from "../utils/hexToRgb";
+import { hexToRgb } from "../utils/color";
+import type { Color } from "../types/planet";
 
 
 
@@ -16,7 +17,7 @@ class Simulation {
     public time: number; // en années
     
     private integrationStepCounter: number;
-    private readonly BASE_DT = 1 / 365; // 1 jour en années
+    private readonly BASE_DT = 0.5 / 365; // 1 heure en années
 
     constructor() {
         this.planets = this.setupPlanets();
@@ -79,7 +80,22 @@ class Simulation {
         if (!this.isRunning) return;
         
         for (let i = 0; i < stepsPerFrame; i++) {
+            if (this.planets.length < 2) break;
+
             velocityVerletStep(this.planets, this.BASE_DT);
+
+            // for (let i = 0; i < this.planets.length; i++) {
+            //     for (let j = i + 1; j < this.planets.length; j++) {
+            //         const planet1 = this.planets[i];
+            //         const planet2 = this.planets[j];
+
+            //         if (planet1.checkCollision(planet1, planet2)) {
+            //             planet1.alive = false;
+            //             planet2.alive = false;
+            //         }
+            //     }
+            // }
+
             this.time += this.BASE_DT * this.timeScale;
             this.integrationStepCounter++;
         }
@@ -88,7 +104,6 @@ class Simulation {
     reset() {
         this.planets = this.setupPlanets();
         this.time = 0;
-        this.timeScale = 1;
         this.integrationStepCounter = 0;
         this.isRunning = true;
     }
@@ -98,6 +113,43 @@ class Simulation {
             planet.clearTrail();
         }
     }
+
+    addPlanet(x: number, y: number, vx: number, vy: number, baseMass: number, radiusDraw: number, name: string, color: Color) {
+        const planet = new Planet(
+            x, y, vx, vy,
+            baseMass,
+            radiusDraw,
+            name,
+            color
+        );
+        
+        this.planets.push(planet);
+    }
+
+    updatePlanetMass(index: number, newMass: number) {
+        if (index >= 0 && index < this.planets.length) {
+            this.planets[index].mass = newMass;
+        }
+    }
+
+    updatePlanetRadius(index: number, newRadius: number) {
+        if (index >= 0 && index < this.planets.length) {
+            this.planets[index].radius = newRadius;
+        }
+    }
+
+    updatePlanetColor(index: number, newColor: Color) {
+        if (index >= 0 && index < this.planets.length) {
+            this.planets[index].color = newColor;
+        }
+    }
+
+    removePlanet(index: number) {
+        if (index >= 0 && index < this.planets.length) {
+            this.planets.splice(index, 1);
+        }
+    }
 }
 
-export const simulation = new Simulation();
+export { Simulation };
+export const instanceSimulation = new Simulation();

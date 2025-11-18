@@ -5,10 +5,10 @@ body {
 }
 
 .select-none {
-  user-select: none;         /* Standard      */
-  -webkit-user-select: none; /* Chrome/Safari */
-  -moz-user-select: none;    /* Firefox       */
-  -ms-user-select: none;     /* IE/Edge       */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .TextSecondary {
@@ -84,6 +84,20 @@ body {
     gap: 12px;
 }
 
+.containerPlanet > *:not(:last-child) {
+    margin-bottom: 32px;
+}
+
+.colorIcon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 8px;
+    border: 2px solid white;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
 button {
     background: #ffffff4d;
     border: 2px solid #ffffff;
@@ -99,6 +113,10 @@ button {
     font-size: 24px;
 }
 
+button:hover {
+    background: #ffffff66;
+}
+
 h3 {
     color: white;
     font-family: monospace;
@@ -106,40 +124,58 @@ h3 {
     font-size: 24px;
 }
 
+.informationContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #0791a0ed;
+    border: 5px solid #ffffff;
+    color: white;
+    width: 600px;
+    border-radius: 8px;
+    padding: 30px 50px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.link {
+    color: #ffffff;
+    font-weight: bold;
+}
+
 
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #FFFFFF #FFFFFF00;
+    scrollbar-width: thin;
+    scrollbar-color: #FFFFFF #FFFFFF00;
 }
 
 ::-webkit-scrollbar {
-  width: 24px;
+    width: 24px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #FFFFFF00;
+    background: #FFFFFF00;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #FFFFFF;
-  border-radius: 10px;
-  border: 2px solid #FFFFFFEF;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    border: 2px solid #FFFFFFEF;
 }
 
 ::-webkit-scrollbar-button {
-  display: none;
+    display: none;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: #FFFFFFEF;
+    background-color: #FFFFFFEF;
 }
 
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-}
-
-input[type=number] {
-    -moz-appearance: textfield;
 }

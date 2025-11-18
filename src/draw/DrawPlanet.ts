@@ -1,8 +1,11 @@
 import p5 from 'p5';
 import Planet from '../physics/planet';
+import { MAX_HISTORY } from '../config/constants';
 
 
 export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: number, zoom: number) {
+    if (!planet.alive) return;
+
     p.push();
 
     // Camera (panning + zoom)
@@ -14,18 +17,30 @@ export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: numb
     const py = planet.pos.y;
 
     // Planet trail ----------------
-    const nbTrailPoints = planet.historyIndex;
-    if (nbTrailPoints > 1) {
-        for (let i = 0; i < nbTrailPoints - 1; i++) {
-            const alpha = p.map(i, 0, nbTrailPoints - 1, 50, 200);
-            p.stroke(planet.color.r, planet.color.g, planet.color.b, alpha);
-            p.strokeWeight(1.5 / zoom);
+    const max = MAX_HISTORY;
+    let idx = planet.historyIndex; // plus ancien point
 
-            p.line(
-                planet.historyX[i], planet.historyY[i],
-                planet.historyX[i + 1], planet.historyY[i + 1]
-            );
+    for (let n = 0; n < max - 1; n++) {
+        const i1 = idx;
+        const i2 = (idx + 1) % max;
+
+        const x1 = planet.historyX[i1];
+        const y1 = planet.historyY[i1];
+        const x2 = planet.historyX[i2];
+        const y2 = planet.historyY[i2];
+
+        if (x1 == null || x2 == null || y1 == null || y2 == null) {
+            idx = i2;
+            continue;
         }
+
+        const alpha = p.map(n, 0, max - 1, 50, 200);
+        p.stroke(planet.color.r, planet.color.g, planet.color.b, alpha);
+        p.strokeWeight(1.5 / zoom);
+
+        p.line(x1, y1, x2, y2);
+
+        idx = i2; // avance correctement dans le buffer circulaire
     }
 
     // Planet body -----------------

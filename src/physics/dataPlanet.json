@@ -1,105 +1,105 @@
 [
     {
         "name": "Sun",
-        "color": "#ffdd55",
+        "color": "#F7D449",
+        "radiusDraw": 25,
         "baseMass": 1.0,
-        "orbit": null,
-        "radiusDraw": 25
+        "orbit": null
     },
     {
         "name": "Mercury",
-        "color": "#b5b5b5",
+        "color": "#B8B4B4",
+        "radiusDraw": 6,
         "baseMass": 1.651e-7,
         "orbit": {
-            "semiMajorAxis": 0.38709927,
-            "eccentricity": 0.20563593,
-            "longitudeOfPerihelion": 77.45779628,
-            "meanLongitude": 252.25032350
-        },
-        "radiusDraw": 6
+            "semiMajorAxis": 0.38709893,
+            "eccentricity": 0.20563069,
+            "longitudeOfPerihelion": 77.45645,
+            "meanLongitude": 252.25084
+        }
     },
     {
         "name": "Venus",
-        "color": "#e1c699",
+        "color": "#E9CFA3",
+        "radiusDraw": 9,
         "baseMass": 2.447e-6,
         "orbit": {
-            "semiMajorAxis": 0.72333566,
-            "eccentricity": 0.00677672,
-            "longitudeOfPerihelion": 131.60246718,
-            "meanLongitude": 181.97909950
-        },
-        "radiusDraw": 9
+            "semiMajorAxis": 0.72333199,
+            "eccentricity": 0.00677323,
+            "longitudeOfPerihelion": 131.53298,
+            "meanLongitude": 181.97973
+        }
     },
     {
         "name": "Earth",
-        "color": "#4ea1ff",
+        "color": "#5FA7FA",
+        "radiusDraw": 10,
         "baseMass": 3.003489e-6,
         "orbit": {
-            "semiMajorAxis": 1.00000261,
-            "eccentricity": 0.01671123,
-            "longitudeOfPerihelion": 102.93768193,
-            "meanLongitude": 100.46457166
-        },
-        "radiusDraw": 10
+            "semiMajorAxis": 1.00000011,
+            "eccentricity": 0.01671022,
+            "longitudeOfPerihelion": 102.94719,
+            "meanLongitude": 100.46435
+        }
     },
     {
         "name": "Mars",
-        "color": "#ff6f4e",
+        "color": "#F96F50",
+        "radiusDraw": 7,
         "baseMass": 3.227e-7,
         "orbit": {
-            "semiMajorAxis": 1.52371034,
-            "eccentricity": 0.09339410,
-            "longitudeOfPerihelion": -23.94362959,
-            "meanLongitude": -4.55343205
-        },
-        "radiusDraw": 7
+            "semiMajorAxis": 1.52366231,
+            "eccentricity": 0.09341233,
+            "longitudeOfPerihelion": 336.04084,
+            "meanLongitude": 355.45332
+        }
     },
     {
         "name": "Jupiter",
-        "color": "#ffb347",
+        "color": "#F6A93F",
+        "radiusDraw": 20,
         "baseMass": 9.5458e-4,
         "orbit": {
-            "semiMajorAxis": 5.20288700,
-            "eccentricity": 0.04838624,
-            "longitudeOfPerihelion": 14.72847983,
-            "meanLongitude": 34.39644051
-        },
-        "radiusDraw": 20
+            "semiMajorAxis": 5.20336301,
+            "eccentricity": 0.04839266,
+            "longitudeOfPerihelion": 14.75385,
+            "meanLongitude": 34.40438
+        }
     },
     {
         "name": "Saturn",
-        "color": "#ffd27f",
+        "color": "#F6C975",
+        "radiusDraw": 18,
         "baseMass": 2.858e-4,
         "orbit": {
-            "semiMajorAxis": 9.53667594,
-            "eccentricity": 0.05386179,
-            "longitudeOfPerihelion": 92.59887831,
-            "meanLongitude": 49.95424423
-        },
-        "radiusDraw": 18
+            "semiMajorAxis": 9.53707032,
+            "eccentricity": 0.05415060,
+            "longitudeOfPerihelion": 92.43194,
+            "meanLongitude": 49.94432
+        }
     },
     {
         "name": "Uranus",
-        "color": "#9bd3ff",
+        "color": "#91CAF6",
+        "radiusDraw": 14,
         "baseMass": 4.366e-5,
         "orbit": {
-            "semiMajorAxis": 19.18916464,
-            "eccentricity": 0.04725744,
-            "longitudeOfPerihelion": 170.95427630,
-            "meanLongitude": 313.23810451
-        },
-        "radiusDraw": 14
+            "semiMajorAxis": 19.19126393,
+            "eccentricity": 0.04716771,
+            "longitudeOfPerihelion": 170.96424,
+            "meanLongitude": 313.23218
+        }
     },
     {
         "name": "Neptune",
-        "color": "#5aa0ff",
+        "color": "#579BFA",
+        "radiusDraw": 14,
         "baseMass": 5.149e-5,
         "orbit": {
-            "semiMajorAxis": 30.06992276,
-            "eccentricity": 0.00859048,
-            "longitudeOfPerihelion": 44.96476227,
-            "meanLongitude": -55.12002969
-        },
-        "radiusDraw": 14
+            "semiMajorAxis": 30.06896348,
+            "eccentricity": 0.00858587,
+            "longitudeOfPerihelion": 44.97135,
+            "meanLongitude": 304.88003
+        }
     }
 ]

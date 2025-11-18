@@ -1,5 +1,5 @@
 import type { Vector, Color } from "../types/planet";
-import { MAX_HISTORY, TRAIL_SAMPLE_STEPS } from "../config/constants";
+import { AMPLIFY_TRAIL, MAX_HISTORY, TRAIL_SAMPLE_STEPS } from "../config/constants";
 
 
 export default class Planet {
@@ -39,7 +39,6 @@ export default class Planet {
     }
 
 
-    // Étape 1 de Velocity Verlet: mise à jour position et vitesse partielle
     velocityVerletStep1(dt: number) {
         this.pos.x += this.vel.x * dt + 0.5 * this.acc.x * dt * dt;
         this.pos.y += this.vel.y * dt + 0.5 * this.acc.y * dt * dt;
@@ -47,22 +46,33 @@ export default class Planet {
         this.vel.y += 0.5 * this.acc.y * dt;
     }
 
-    // Étape 2 de Velocity Verlet: finalisation de la vitesse
     velocityVerletStep2(dt: number) {
         this.vel.x += 0.5 * this.acc.x * dt;
         this.vel.y += 0.5 * this.acc.y * dt;
     }
 
-    // Enregistre la traînée
+    // checkCollision(planet1: Planet, planet2: Planet): boolean {
+    //     const dx = planet1.pos.x - planet2.pos.x;
+    //     const dy = planet1.pos.y - planet2.pos.y;
+    //     const dist2 = dx*dx + dy*dy;
+    //     const minDist = (planet1.radius + planet2.radius);
+
+    //     return dist2 < minDist * minDist;
+    // }
+
+
     recordTrail() {
         this.trailStepCounter++;
-        if (this.trailStepCounter % TRAIL_SAMPLE_STEPS !== 0) return;
+        const speed = Math.sqrt(this.vel.x*this.vel.x + this.vel.y*this.vel.y);
 
-        // écrire à l’index courant
+        let sampleSteps = Math.max(1, Math.round(TRAIL_SAMPLE_STEPS / speed * 2));
+        sampleSteps = Math.round(sampleSteps * AMPLIFY_TRAIL);
+
+        if (this.trailStepCounter % sampleSteps !== 0) return;
+
         this.historyX[this.historyIndex] = this.pos.x;
         this.historyY[this.historyIndex] = this.pos.y;
 
-        // avancer modulo
         this.historyIndex = (this.historyIndex + 1) % MAX_HISTORY;
     }
 

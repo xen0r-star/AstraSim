@@ -4,6 +4,34 @@ body {
     overflow: hidden;
 }
 
+button {
+    background: #ffffff4d;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    color: white;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+button:hover {
+    background: #ffffff66;
+}
+
+h3 {
+    color: white;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+
+
 .select-none {
     user-select: none;
     -webkit-user-select: none;
@@ -98,32 +126,6 @@ body {
     cursor: pointer;
 }
 
-button {
-    background: #ffffff4d;
-    border: 2px solid #ffffff;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    color: white;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 24px;
-}
-
-button:hover {
-    background: #ffffff66;
-}
-
-h3 {
-    color: white;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 24px;
-}
-
 .informationContainer {
     position: absolute;
     top: 50%;
@@ -145,6 +147,7 @@ h3 {
     color: #ffffff;
     font-weight: bold;
 }
+
 
 
 * {

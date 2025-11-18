@@ -1,5 +1,5 @@
-// ResponsiveContent.tsx
 import React, { type ReactNode, useState, useEffect } from "react";
+
 
 interface ResponsiveContentProps {
     desktop: ReactNode;

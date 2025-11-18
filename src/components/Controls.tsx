@@ -7,11 +7,14 @@ import { MASS_DISPLAY_MULTIPLIER } from '../config/constants';
 import { rgbToHex } from '../utils/color';
 
 
+
 const Controls: React.FC = () => {
     const { isVisible, setIsVisible } = usePanel();
     const [, forceUpdate] = useState({});
     const [colorPickerIndex, setColorPickerIndex] = useState<number | null>(null);
     const [isAddingPlanet, setIsAddingPlanet] = useState(false);
+
+
 
     const handleMassChange = (index: number, newMass: number) => {
         simulation.updatePlanetMass(index, newMass);
@@ -26,8 +29,7 @@ const Controls: React.FC = () => {
     const handleAddPlanet = () => {
         setIsAddingPlanet(true);
         document.body.style.cursor = 'crosshair';
-        // Dispatcher un événement pour indiquer qu'on veut ajouter une planète
-        window.dispatchEvent(new CustomEvent('startAddingPlanet'));
+        window.dispatchEvent(new CustomEvent('startAddingPlanet')); // Event to indicate we want to add a planet
     };
 
     const handleRemovePlanet = (index: number) => {
@@ -36,10 +38,9 @@ const Controls: React.FC = () => {
     };
 
     const handleFocusPlanet = (index: number) => {
-        // Cette fonctionnalité nécessite d'accéder aux refs de MainGame
-        // On va dispatcher un événement personnalisé
-        window.dispatchEvent(new CustomEvent('focusPlanet', { detail: { planetIndex: index } }));
+        window.dispatchEvent(new CustomEvent('focusPlanet', { detail: { planetIndex: index } })); // Event to indicate we want to focus a planet
     };
+
 
     const handleColorChange = (index: number, hex: string) => {
         const r = parseInt(hex.slice(1, 3), 16);
@@ -69,6 +70,7 @@ const Controls: React.FC = () => {
             window.removeEventListener('cancelAddPlanet', handleCancelAddPlanet);
         };
     }, []);
+
 
     return (
         <>
@@ -105,13 +107,7 @@ const Controls: React.FC = () => {
                         {colorPickerIndex !== null && (
                             <div style={{ position: 'absolute', top: 0, right: 310, zIndex: 1000 }}>
                                 <div 
-                                    style={{ 
-                                        position: 'fixed', 
-                                        top: 0, 
-                                        left: 0, 
-                                        right: 0, 
-                                        bottom: 0 
-                                    }} 
+                                    style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }} 
                                     onClick={() => setColorPickerIndex(null)}
                                 />
                                 <div style={{ position: 'relative' }}>
@@ -136,7 +132,7 @@ const Controls: React.FC = () => {
                                 </h2>
                             </div>
 
-                            <button title='Add planet' onClick={handleAddPlanet} style={{ opacity: isAddingPlanet ? 0.5 : 1 }}>
+                            <button title='Add planet' style={{ opacity: isAddingPlanet ? 0.5 : 1 }} onClick={handleAddPlanet} >
                                 <svg width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M256 112V400" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
                                     <path d="M400 256H112" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
@@ -199,5 +195,6 @@ const Controls: React.FC = () => {
         </>
     );
 };
+
 
 export default Controls;

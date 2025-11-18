@@ -5,6 +5,7 @@ import MainGame from './components/MainGame'
 import Mobile from './components/mobile'
 import { PanelProvider } from './provider/PanelProvider'
 
+
 function App() {
     return (
         <ResponsiveContent

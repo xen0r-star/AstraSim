@@ -4,6 +4,7 @@ import './style.css'
 import App from './App.tsx'
 import { ErrorBoundary } from './error/ErrorBoundary.tsx'
 
+
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <ErrorBoundary>

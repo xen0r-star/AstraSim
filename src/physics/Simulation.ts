@@ -1,10 +1,10 @@
 import Planet from "./planet";
 import type { DataPlanet } from "../types/dataPlanet";
+import type { Color } from "../types/planet";
 import rawData from "./dataPlanet.json" assert { type: "json" };
 import { computeOrbitalState, alignToBarycenter } from "./orbitUtils";
 import { computeAccelerations, velocityVerletStep } from "./gravity";
 import { hexToRgb } from "../utils/color";
-import type { Color } from "../types/planet";
 
 
 
@@ -14,10 +14,10 @@ class Simulation {
     public planets: Planet[];
     public isRunning: boolean;
     public timeScale: number;
-    public time: number; // en années
+    public time: number; // in years
     
     private integrationStepCounter: number;
-    private readonly BASE_DT = 0.5 / 365; // 1 heure en années
+    private readonly BASE_DT = 0.5 / 365; // 12 hour in years
 
     constructor() {
         this.planets = this.setupPlanets();
@@ -31,28 +31,29 @@ class Simulation {
     setupPlanets(): Planet[] {
         const planets: Planet[] = [];
         
-        // Trouver le Soleil
+        // Find the Sun
         const sunTemplate = DATA_PLANET.find(t => t.name === "Sun");
         if (!sunTemplate) throw new Error("Sun template not found");
         
-        // Créer tous les corps à partir des templates
+        // Create all bodies from templates
         for (const template of DATA_PLANET) {
             let x = 0, y = 0, vx = 0, vy = 0;
             
-            // Si le corps a une orbite, calculer sa position/vitesse initiale
+            // If the body has an orbit, calculate its initial position/velocity
             if (template.orbit && sunTemplate) {
                 const state = computeOrbitalState(
                     template.orbit, 
                     sunTemplate.baseMass, 
                     template.baseMass
                 );
+
                 x = state.position.x;
                 y = state.position.y;
                 vx = state.velocity.x;
                 vy = state.velocity.y;
             }
             
-            // Convertir la couleur hex en RGB
+
             const color = hexToRgb(template.color);
             
             const planet = new Planet(
@@ -66,16 +67,16 @@ class Simulation {
             planets.push(planet);
         }
         
-        // Aligner le système au barycentre
+        // Align the system to the barycenter
         alignToBarycenter(planets);
         
-        // Calculer les accélérations initiales
+        // Compute initial accelerations
         computeAccelerations(planets);
         
         return planets;
     }
 
-    // Effectuer plusieurs pas d'intégration
+    // Perform several integration steps
     step(stepsPerFrame: number = 1) {
         if (!this.isRunning) return;
         
@@ -150,6 +151,7 @@ class Simulation {
         }
     }
 }
+
 
 export { Simulation };
 export const instanceSimulation = new Simulation();

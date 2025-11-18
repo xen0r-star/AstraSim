@@ -4,6 +4,7 @@ import { drawGrid } from '../draw/DrawHUD';
 import { drawBorder } from '../draw/DrawHUD';
 
 
+
 const Mobile: React.FC = () => {
     const canvasRef = useRef<HTMLDivElement>(null);
     
@@ -34,9 +35,13 @@ const Mobile: React.FC = () => {
         <div style={{ position: 'relative' }}>
             <div ref={canvasRef}></div>
 
-            <div className='TextTitle select-none' style={{top: 30, left: '50%', transform: 'translateX(-50%)', cursor: 'pointer'}} onClick={() => {
-                window.open('https://github.com/Xen0r-Star/AstraSim');
-            }}>
+            <div 
+                className='TextTitle select-none' 
+                style={{top: 30, left: '50%', transform: 'translateX(-50%)', cursor: 'pointer'}} 
+                onClick={() => {
+                    window.open('https://github.com/Xen0r-Star/AstraSim');
+                }}
+            >
                 ASTRA SIM
             </div>
 
@@ -46,5 +51,6 @@ const Mobile: React.FC = () => {
         </div>
     );
 };
+
 
 export default Mobile;

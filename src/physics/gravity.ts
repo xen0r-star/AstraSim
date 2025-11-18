@@ -5,17 +5,17 @@ import { SOLAR_G, SOFTENING } from './../config/constants';
 
 const SOFTENING2 = SOFTENING * SOFTENING;
 
-// Calcule les accélérations pour tous les corps (gravité N-corps)
+// Calculates accelerations for all bodies (N-body gravity)
 export function computeAccelerations(planets: Planet[]) {
     const n = planets.length;
     
-    // Réinitialiser les accélérations
+    // Reset accelerations
     for (let i = 0; i < n; i++) {
         planets[i].acc.x = 0;
         planets[i].acc.y = 0;
     }
     
-    // Calculer les interactions gravitationnelles
+    // Calculate gravitational interactions
     for (let i = 0; i < n; i++) {
         for (let j = i + 1; j < n; j++) {
             const A = planets[i];
@@ -27,11 +27,11 @@ export function computeAccelerations(planets: Planet[]) {
             const r = Math.sqrt(r2);
             const r3 = r2 * r;
             
-            // Force gravitationnelle avec softening
+            // Gravitational force with softening
             const fx = SOLAR_G * dx / r3;
             const fy = SOLAR_G * dy / r3;
             
-            // Appliquer aux accélérations (F = ma, donc a = F/m)
+            // Apply to accelerations (F = ma => a = F/m)
             A.acc.x += B.mass * fx;
             A.acc.y += B.mass * fy;
             
@@ -41,17 +41,18 @@ export function computeAccelerations(planets: Planet[]) {
     }
 }
 
-// Intégration Velocity Verlet - plus stable que l'Euler
+
+// Velocity Verlet integration - more stable than Euler
 export function velocityVerletStep(planets: Planet[], dt: number) {
-    // Étape 1: mettre à jour positions et vitesses partielles
+    // Step 1: update positions and partial velocities
     for (const planet of planets) {
         planet.velocityVerletStep1(dt);
     }
     
-    // Recalculer les accélérations avec les nouvelles positions
+    // Recalculate accelerations with new positions
     computeAccelerations(planets);
     
-    // Étape 2: finaliser les vitesses
+    // Step 2: finalize velocities
     for (const planet of planets) {
         planet.velocityVerletStep2(dt);
         planet.recordTrail();

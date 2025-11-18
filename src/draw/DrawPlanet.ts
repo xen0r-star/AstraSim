@@ -3,8 +3,12 @@ import Planet from '../physics/planet';
 import { MAX_HISTORY } from '../config/constants';
 
 
+
 export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: number, zoom: number) {
     if (!planet.alive) return;
+    const px = planet.pos.x;
+    const py = planet.pos.y;
+
 
     p.push();
 
@@ -12,13 +16,11 @@ export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: numb
     p.translate(offsetX, offsetY);
     p.scale(zoom);
 
-    // Physical position of the planet (en AU)
-    const px = planet.pos.x;
-    const py = planet.pos.y;
+
 
     // Planet trail ----------------
     const max = MAX_HISTORY;
-    let idx = planet.historyIndex; // plus ancien point
+    let idx = planet.historyIndex; // Oldest point
 
     for (let n = 0; n < max - 1; n++) {
         const i1 = idx;
@@ -40,15 +42,15 @@ export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: numb
 
         p.line(x1, y1, x2, y2);
 
-        idx = i2; // avance correctement dans le buffer circulaire
+        idx = i2;
     }
 
+    
     // Planet body -----------------
     p.push();
     p.translate(px, py);
     
-    // Rayon de la planète en pixels divisé par zoom pour avoir une taille constante à l'écran
-    const displayRadius = planet.radius / zoom;
+    const displayRadius = planet.radius / zoom; // Adjust radius based on zoom level
     
     // Planet shading --------------
     p.push();

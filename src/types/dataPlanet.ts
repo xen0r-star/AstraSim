@@ -1,14 +1,14 @@
 export interface OrbitalElements {
     semiMajorAxis: number;         // a (AU)
-    eccentricity: number;          // e (sans unité)
-    longitudeOfPerihelion: number; // ϖ (degrés)
-    meanLongitude: number;         // L (degrés)
+    eccentricity: number;          // e (unitless)
+    longitudeOfPerihelion: number; // ϖ (degrees)
+    meanLongitude: number;         // L (degrees)
 }
 
 export interface DataPlanet {
     name: string;
     color: string;
-    baseMass: number;               // masse en masses solaires
-    orbit: OrbitalElements | null;  // null pour le Soleil
-    radiusDraw: number;             // rayon d'affichage en pixels
+    baseMass: number;               // mass in solar masses
+    orbit: OrbitalElements | null;  // null for the Sun
+    radiusDraw: number;             // display radius in pixels
 }

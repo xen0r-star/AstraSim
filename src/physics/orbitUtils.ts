@@ -4,7 +4,6 @@ import { SOLAR_G, DEG2RAD } from "./../config/constants";
 import { normalizeDegrees } from "../utils/normalizeDegrees";
 
 
-
 interface returnOrbitalState { 
     position: { 
         x: number; 
@@ -16,8 +15,9 @@ interface returnOrbitalState {
 }
 
 
-// Résout l'équation de Kepler: E - e*sin(E) = M
-// Utilise la méthode de Newton-Raphson
+
+// Solve Kepler's equation: E - e*sin(E) = M
+// Uses the Newton-Raphson method
 export function solveKeplerEquation(
     meanAnomaly: number, 
     eccentricity: number, 
@@ -38,7 +38,8 @@ export function solveKeplerEquation(
     return E;
 }
 
-// Calcule la position et la vitesse à partir des éléments orbitaux J2000
+
+// Calculates position and velocity from J2000 orbital elements
 export function computeOrbitalState(
     orbit: OrbitalElements, 
     centralMass: number, 
@@ -47,12 +48,12 @@ export function computeOrbitalState(
     const a = orbit.semiMajorAxis;
     const e = orbit.eccentricity;
     
-    // Calculer l'anomalie moyenne
+    // Calculate the mean anomaly
     const meanAnomalyDegrees = normalizeDegrees(orbit.meanLongitude - orbit.longitudeOfPerihelion);
     const meanAnomaly = meanAnomalyDegrees * DEG2RAD;
     const periLon = orbit.longitudeOfPerihelion * DEG2RAD;
     
-    // Résoudre l'équation de Kepler pour l'anomalie excentrique E
+    // Solve Kepler's equation for the eccentric anomaly E
     const E = solveKeplerEquation(meanAnomaly, e);
     
     const cosE = Math.cos(E);
@@ -60,17 +61,17 @@ export function computeOrbitalState(
     const sqrtOneMinusESq = Math.sqrt(1 - e * e);
     const r = a * (1 - e * cosE);
     
-    // Position dans le plan orbital
+    // Position in the orbital plane
     const px = a * (cosE - e);
     const py = a * sqrtOneMinusESq * sinE;
     
-    // Vitesse dans le plan orbital
+    // Velocity in the orbital plane
     const mu = SOLAR_G * (centralMass + bodyMass);
     const sqrtMuA = Math.sqrt(mu * a);
     const vxOrb = -sqrtMuA / r * sinE;
     const vyOrb = sqrtMuA / r * sqrtOneMinusESq * cosE;
     
-    // Rotation pour la longitude du périhélie
+    // Rotation for the longitude of perihelion
     const cosW = Math.cos(periLon);
     const sinW = Math.sin(periLon);
     
@@ -86,7 +87,8 @@ export function computeOrbitalState(
     };
 }
 
-// Aligner le système au barycentre (centre de masse)
+
+// Align the system to the barycenter (center of mass)
 export function alignToBarycenter(planets: Planet[]): void {
     let totalMass = 0;
     let sumX = 0;
@@ -111,7 +113,7 @@ export function alignToBarycenter(planets: Planet[]): void {
     const cvx = sumVx * invMass;
     const cvy = sumVy * invMass;
     
-    // Déplacer tout le système pour centrer le barycentre
+    // Move the entire system to center the barycenter
     for (const planet of planets) {
         planet.pos.x -= cx;
         planet.pos.y -= cy;

@@ -3,6 +3,7 @@ import { drawBorder, drawGrid } from '../draw/DrawHUD';
 import p5 from 'p5';
 
 
+
 interface ErrorBoundaryProps {
     children: ReactNode;
 }
@@ -10,6 +11,7 @@ interface ErrorBoundaryProps {
 interface ErrorBoundaryState {
     hasError: boolean;
 }
+
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
     private containerRef = React.createRef<HTMLDivElement>();
@@ -19,6 +21,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
         super(props);
         this.state = { hasError: false };
     }
+
 
     static getDerivedStateFromError(): ErrorBoundaryState {
         return { hasError: true };
@@ -57,19 +60,23 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     render() {
         if (this.state.hasError) {
             return (
-            <div style={{ position: 'relative' }}>
-                <div ref={this.containerRef}></div>
+                <div style={{ position: 'relative' }}>
+                    <div ref={this.containerRef}></div>
 
-                <div className='TextTitle select-none' style={{top: 30, left: '50%', transform: 'translateX(-50%)', cursor: 'pointer'}} onClick={() => {
-                    window.open('https://github.com/Xen0r-Star/AstraSim');
-                }}>
-                    ASTRA SIM
-                </div>
+                    <div 
+                        className='TextTitle select-none' 
+                        style={{top: 30, left: '50%', transform: 'translateX(-50%)', cursor: 'pointer'}} 
+                        onClick={() => {
+                            window.open('https://github.com/Xen0r-Star/AstraSim');
+                        }}
+                    >
+                        ASTRA SIM
+                    </div>
 
-                <div className='TextBig' style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center'}}>
-                    Error occurred while loading the simulation
+                    <div className='TextBig' style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center'}}>
+                        Error occurred while loading the simulation
+                    </div>
                 </div>
-            </div>
             );
         }
 

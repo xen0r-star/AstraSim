@@ -16,7 +16,7 @@ const MainGame: React.FC = () => {
 
     const offsetX = useRef(window.innerWidth / 2);
     const offsetY = useRef(window.innerHeight / 2);
-    const zoom = useRef(60); // Base scale to convert AU to pixels (1 AU = 60 pixels)
+    const zoom = useRef(60); // Default: 1 AU = 60 pixels
     const isDragging = useRef(false);
     const lastMouseX = useRef(0);
     const lastMouseY = useRef(0);
@@ -37,6 +37,7 @@ const MainGame: React.FC = () => {
         setTimeScaleIndex(next);
         setStepsPerFrame(timeScales[next]);
     };
+
 
     useEffect(() => {
         const sketch = (p5: p5) => {
@@ -74,31 +75,29 @@ const MainGame: React.FC = () => {
                     if (isAddingPlanet.current) {
                         document.body.style.cursor = 'default';
 
-                        // Convertir les coordonnées écran en coordonnées monde
                         const worldX = (p5.mouseX - offsetX.current) / zoom.current;
                         const worldY = (p5.mouseY - offsetY.current) / zoom.current;
 
-                        // Couleur flachie
                         const randomColor = {
                             r: Math.floor(Math.random() * 255),
                             g: Math.floor(Math.random() * 255),
                             b: Math.floor(Math.random() * 255)
                         };
 
-                        // Ajoute la planète à la position cliquée
                         simulation.addPlanet(
-                            worldX,
-                            worldY,
-                            0, // vx velocity
-                            0, // vy velocity
+                            worldX,                      // world X coordinate
+                            worldY,                      // world Y coordinate
+                            0,                           // vx velocity
+                            0,                           // vy velocity
                             1 / MASS_DISPLAY_MULTIPLIER, // mass
-                            5, // radius
+                            5,                           // radius
                             `Planet ${simulation.planets.length + 1}`,
                             randomColor
                         );
 
                         isAddingPlanet.current = false;
                         window.dispatchEvent(new Event('planetAdded'));
+
                     } else {
                         isDragging.current = true;
                         lastMouseX.current = p5.mouseX;
@@ -155,20 +154,19 @@ const MainGame: React.FC = () => {
 
                 setZoomDisplay(zoom.current);
             };
-
         };
 
 
-        const myP5 = new p5(sketch, canvasRef.current!);
+        const p5Instance = new p5(sketch, canvasRef.current!);
 
-        // Gestionnaire d'événement pour focus planet
         const handleFocusPlanet = (event: Event) => {
             const customEvent = event as CustomEvent;
             const { planetIndex } = customEvent.detail;
             
             if (planetIndex >= 0 && planetIndex < simulation.planets.length) {
                 const planet = simulation.planets[planetIndex];
-                // Centrer la caméra sur la planète
+
+                // Center the camera on the planet
                 offsetX.current = window.innerWidth / 2 - planet.pos.x * zoom.current;
                 offsetY.current = window.innerHeight / 2 - planet.pos.y * zoom.current;
                 
@@ -177,16 +175,16 @@ const MainGame: React.FC = () => {
             }
         };
 
-        // Gestionnaire pour démarrer l'ajout de planète
         const handleStartAddingPlanet = () => {
             isAddingPlanet.current = true;
         };
+
 
         window.addEventListener('focusPlanet', handleFocusPlanet);
         window.addEventListener('startAddingPlanet', handleStartAddingPlanet);
 
         return () => {
-            myP5.remove();
+            p5Instance.remove();
             window.removeEventListener('focusPlanet', handleFocusPlanet);
             window.removeEventListener('startAddingPlanet', handleStartAddingPlanet);
         };
@@ -197,14 +195,22 @@ const MainGame: React.FC = () => {
         <div style={{ position: 'relative' }}>
             <div ref={canvasRef}></div>
 
-            <div className='TextPrimary select-none' style={{top: 30, left: 35, cursor: 'pointer'}} onClick={() => {
-                window.open('https://github.com/Xen0r-Star/AstraSim');
-            }}>
+            <div 
+                className='TextPrimary select-none' 
+                style={{top: 30, left: 35, cursor: 'pointer'}} 
+                onClick={() => {
+                    window.open('https://github.com/Xen0r-Star/AstraSim');
+                }}
+            >
                 ASTRA SIM
             </div>
-            <div className='TextSecondary select-none' style={{top: 58, left: 35, cursor: 'pointer'}} onClick={() => {
-                window.open('https://github.com/Xen0r-Star');
-            }}>
+            <div 
+                className='TextSecondary select-none' 
+                style={{top: 58, left: 35, cursor: 'pointer'}} 
+                onClick={() => {
+                    window.open('https://github.com/Xen0r-Star');
+                }}
+            >
                 by Xen0r Star
             </div>
 
@@ -225,19 +231,27 @@ const MainGame: React.FC = () => {
                 transition={{ duration: 0.3 }}
             >
                 <div className='TextSecondary select-none' style={{ bottom: 35, right: 35 }}>
-                    <span title='Offset display' style={{ cursor: 'pointer'}} onClick={() => {
-                        offsetX.current = window.innerWidth / 2;
-                        offsetY.current = window.innerHeight / 2;
-                        setOffsetXDisplay(0);
-                        setOffsetYDisplay(0);
-                    }}>
+                    <span 
+                        title='Offset display' 
+                        style={{ cursor: 'pointer'}} 
+                        onClick={() => {
+                            offsetX.current = window.innerWidth / 2;
+                            offsetY.current = window.innerHeight / 2;
+                            setOffsetXDisplay(0);
+                            setOffsetYDisplay(0);
+                        }}
+                    >
                         x:{(-offsetXDisplay / zoomDisplay).toFixed(2)} y:{(offsetYDisplay / zoomDisplay).toFixed(2)} AU
                     </span>
                     <span> | </span>
-                    <span title='Zoom' style={{ cursor: 'pointer'}} onClick={() => {
-                        zoom.current = 60; 
-                        setZoomDisplay(60);
-                    }}>
+                    <span 
+                        title='Zoom' 
+                        style={{ cursor: 'pointer'}} 
+                        onClick={() => {
+                            zoom.current = 60; 
+                            setZoomDisplay(60);
+                        }}
+                    >
                         {(zoomDisplay / 60).toFixed(2)}x
                     </span>
                     <span> | </span>
@@ -250,7 +264,10 @@ const MainGame: React.FC = () => {
                     </span>
                 </div>
                 <div style={{ position: 'absolute', bottom: 60, right: 35, display: 'flex', gap: 10 }}>
-                    <button onClick={() => simulation.isRunning = !simulation.isRunning} title={!simulation.isRunning ? 'Play' : 'Pause'}>
+                    <button 
+                        title={!simulation.isRunning ? 'Play' : 'Pause'}
+                        onClick={() => simulation.isRunning = !simulation.isRunning} 
+                    >
                         {!simulation.isRunning ? (
                             <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M132.999 440.002C126.859 439.99 120.828 438.381 115.499 435.332C103.499 428.532 96.0391 415.332 96.0391 401.002V111.002C96.0391 96.6318 103.499 83.4718 115.499 76.6718C120.955 73.5361 127.153 71.9236 133.446 72.0028C139.738 72.0819 145.894 73.8499 151.269 77.1218L399.119 225.482C404.284 228.721 408.543 233.218 411.494 238.553C414.446 243.888 415.994 249.885 415.994 255.982C415.994 262.079 414.446 268.076 411.494 273.41C408.543 278.745 404.284 283.243 399.119 286.482L151.229 434.882C145.728 438.207 139.427 439.977 132.999 440.002Z" fill="white"/>
@@ -263,30 +280,37 @@ const MainGame: React.FC = () => {
                         )}
 
                     </button>
-                    <button onClick={() => {
-                        simulation.reset();
-                        offsetX.current = window.innerWidth / 2;
-                        offsetY.current = window.innerHeight / 2;
-                        zoom.current = 60;
-                        setOffsetXDisplay(0);
-                        setOffsetYDisplay(0);
-                        setZoomDisplay(60);
-                    }} title='Restore the simulation'>
+                    <button 
+                        title='Restore the simulation'
+                        onClick={() => {
+                            simulation.reset();
+                            offsetX.current = window.innerWidth / 2;
+                            offsetY.current = window.innerHeight / 2;
+                            zoom.current = 60;
+                            setOffsetXDisplay(0);
+                            setOffsetYDisplay(0);
+                            setZoomDisplay(60);
+                        }} 
+                    >
                         <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M320 146C320 146 344.36 134 256 134C224.355 134 193.421 143.384 167.109 160.965C140.797 178.546 120.289 203.534 108.179 232.771C96.0693 262.007 92.9008 294.177 99.0744 325.214C105.248 356.251 120.487 384.761 142.863 407.137C165.239 429.513 193.749 444.752 224.786 450.926C255.823 457.099 287.993 453.931 317.229 441.821C346.466 429.711 371.454 409.203 389.035 382.891C406.616 356.579 416 325.645 416 294" stroke="white" strokeWidth="32" strokeMiterlimit="10" strokeLinecap="round"/>
                             <path d="M256 58L336 138L256 218" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>
                     <button 
-                        onClick={() => simulation.clearTrails()}
                         title="Clear Trails"
+                        onClick={() => simulation.clearTrails()}
                     >
                         <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z" fill="none" stroke="white" strokeMiterlimit="10" strokeWidth="32"/>
                             <path d="M320 320L192 192M192 320l128-128" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32"/>
                         </svg>
                     </button>
-                    <button style={{ minWidth: 55 }} onClick={nextTimeScale} title='Change the refresh rate'>
+                    <button 
+                        title='Change the refresh rate'
+                        onClick={nextTimeScale} 
+                        style={{ minWidth: 55 }} 
+                    >
                         {timeScales[timeScaleIndex]}x
                     </button>
                 </div>
@@ -295,5 +319,6 @@ const MainGame: React.FC = () => {
         </div>
     );
 };
+
 
 export default MainGame;

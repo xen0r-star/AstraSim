@@ -9,26 +9,45 @@ export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: numb
     p.translate(offsetX, offsetY);
     p.scale(zoom);
 
-    // Physical position of the planet
-    const px = planet.getPos().x;
-    const py = planet.getPos().y;
+    // Physical position of the planet (en AU)
+    const px = planet.pos.x;
+    const py = planet.pos.y;
 
+    // Planet trail ----------------
+    const nbTrailPoints = planet.historyIndex;
+    if (nbTrailPoints > 1) {
+        for (let i = 0; i < nbTrailPoints - 1; i++) {
+            const alpha = p.map(i, 0, nbTrailPoints - 1, 50, 200);
+            p.stroke(planet.color.r, planet.color.g, planet.color.b, alpha);
+            p.strokeWeight(1.5 / zoom);
+
+            p.line(
+                planet.historyX[i], planet.historyY[i],
+                planet.historyX[i + 1], planet.historyY[i + 1]
+            );
+        }
+    }
+
+    // Planet body -----------------
     p.push();
     p.translate(px, py);
+    
+    // Rayon de la planète en pixels divisé par zoom pour avoir une taille constante à l'écran
+    const displayRadius = planet.radius / zoom;
     
     // Planet shading --------------
     p.push();
     p.rotate(p.PI / 4);
-    for (let i = -planet.getRadius(), step = 0; i <= planet.getRadius(); i += 8, step++) {
+    for (let i = -displayRadius, step = 0; i <= displayRadius; i += displayRadius / 4, step++) {
         
-        const lineLength = Math.sqrt(planet.getRadius() ** 2 - i ** 2) * 2;
+        const lineLength = Math.sqrt(displayRadius ** 2 - i ** 2) * 2;
 
         if (step % 2 === 0) {
-            p.strokeWeight(2 / zoom);
-            p.stroke(planet.getColor().r, planet.getColor().g, planet.getColor().b, 150);
+            p.strokeWeight(1.5 / zoom);
+            p.stroke(planet.color.r, planet.color.g, planet.color.b, 150);
         } else {
-            p.strokeWeight(1.75 / zoom);
-            p.stroke(planet.getColor().r, planet.getColor().g, planet.getColor().b, 125);
+            p.strokeWeight(1 / zoom);
+            p.stroke(planet.color.r, planet.color.g, planet.color.b, 125);
         }
 
         p.line(i, -lineLength / 2, i, lineLength / 2);
@@ -36,26 +55,12 @@ export function drawPlanet(p: p5, planet: Planet, offsetX: number, offsetY: numb
     p.pop();
 
     // Planet outline --------------
-    p.fill(planet.getColor().r, planet.getColor().g, planet.getColor().b, 50);
-    p.stroke(planet.getColor().r, planet.getColor().g, planet.getColor().b, 255);
-    p.strokeWeight(3.5 / zoom);
-    p.ellipse(0, 0, planet.getRadius() * 2);
+    p.fill(planet.color.r, planet.color.g, planet.color.b, 50);
+    p.stroke(planet.color.r, planet.color.g, planet.color.b, 255);
+    p.strokeWeight(2 / zoom);
+    p.ellipse(0, 0, displayRadius * 2);
 
     p.pop();
-
-    // Planet trail ----------------
-    const trail = planet.getHistoryPos();
-    for (let i = 0; i < trail.length - 1; i++) {
-        const alpha = p.map(i, 0, trail.length - 1, 0, 255);
-        p.stroke(planet.getColor().r, planet.getColor().g, planet.getColor().b, alpha);
-        p.strokeWeight(2);
-
-        p.line(
-            trail[i].x, trail[i].y,
-            trail[i + 1].x, trail[i + 1].y
-        );
-    }
 
     p.pop();
 }
-

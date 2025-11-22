@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { HexColorPicker } from "react-colorful";
-import { usePanel } from '../context/PanelContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { instanceSimulation as simulation } from '../physics/simulation';
 import { MASS_DISPLAY_MULTIPLIER } from '../config/constants';
 import { rgbToHex } from '../utils/color';
+import type Planet from '../physics/planet';
+import { usePanel } from '../context/panelContext';
 
 
 
@@ -37,8 +38,8 @@ const Controls: React.FC = () => {
         forceUpdate({});
     };
 
-    const handleFocusPlanet = (index: number) => {
-        window.dispatchEvent(new CustomEvent('focusPlanet', { detail: { planetIndex: index } })); // Event to indicate we want to focus a planet
+    const handleFocusPlanet = (planet: Planet) => {
+        window.dispatchEvent(new CustomEvent('focusPlanet', { detail: { planet: planet } })); // Event to indicate we want to focus a planet
     };
 
 
@@ -155,7 +156,7 @@ const Controls: React.FC = () => {
                                                 {planet.name}
                                             </h3>
 
-                                            <div title='Focus planet' style={{ cursor: 'pointer', display: 'flex', marginLeft: 5 }} onClick={() => handleFocusPlanet(index)}>
+                                            <div title='Focus planet' style={{ cursor: 'pointer', display: 'flex', marginLeft: 5 }} onClick={() => handleFocusPlanet(planet)}>
                                                 <svg width="20" height="20" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M304 416V304H416" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
                                                     <path d="M314.199 314.23L431.999 432" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>

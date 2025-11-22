@@ -30,6 +30,11 @@ h3 {
     font-size: 24px;
 }
 
+p {
+    color: white;
+    margin: 0;
+}
+
 
 
 .select-none {
@@ -37,6 +42,13 @@ h3 {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+}
+
+.select-text {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
 }
 
 .TextSecondary {
@@ -146,6 +158,18 @@ h3 {
 .link {
     color: #ffffff;
     font-weight: bold;
+}
+
+.planetInformation {
+    background: #ffffff33;
+    border: 3px solid #ffffff;
+    width: 250px;
+    border-radius: 8px;
+    padding: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 

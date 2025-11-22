@@ -1,7 +1,7 @@
 import Planet from "./planet";
 import type { DataPlanet } from "../types/dataPlanet";
 import type { Color } from "../types/planet";
-import rawData from "./dataPlanet.json" assert { type: "json" };
+import rawData from "../config/dataPlanet.json" assert { type: "json" };
 import { computeOrbitalState, alignToBarycenter } from "./orbitUtils";
 import { computeAccelerations, velocityVerletStep } from "./gravity";
 import { hexToRgb } from "../utils/color";
@@ -81,8 +81,6 @@ class Simulation {
         if (!this.isRunning) return;
         
         for (let i = 0; i < stepsPerFrame; i++) {
-            if (this.planets.length < 2) break;
-
             velocityVerletStep(this.planets, this.BASE_DT);
 
             // for (let i = 0; i < this.planets.length; i++) {

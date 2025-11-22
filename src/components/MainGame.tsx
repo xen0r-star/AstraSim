@@ -4,15 +4,19 @@ import { motion } from "framer-motion";
 import { drawGrid } from '../draw/DrawHUD';
 import { drawPlanet } from '../draw/DrawPlanet';
 import { drawBorder } from '../draw/DrawHUD';
-import { usePanel } from '../context/PanelContext';
+import { usePanel } from '../context/panelContext';
+import { useInformation } from '../context/InformationContext';
 import { MASS_DISPLAY_MULTIPLIER, timeScales } from '../config/constants';
 import { instanceSimulation as simulation } from '../physics/simulation';
+import type Planet from '../physics/planet';
+import { isUserSelectingText } from '../utils/userSelectingText';
 
 
 
 const MainGame: React.FC = () => {
     const canvasRef = useRef<HTMLDivElement>(null);
     const { isVisible } = usePanel();
+    const { show, setShow } = useInformation();
 
     const offsetX = useRef(window.innerWidth / 2);
     const offsetY = useRef(window.innerHeight / 2);
@@ -26,6 +30,7 @@ const MainGame: React.FC = () => {
     const [fpsDisplay, setFpsDisplay] = useState(0);
     const [offsetXDisplay, setOffsetXDisplay] = useState(0);
     const [offsetYDisplay, setOffsetYDisplay] = useState(0);
+    const [planetInformation, setPlanetInformation] = useState<Planet | null>(null);
 
     // Simulation speeds in steps/frame
     const [timeScaleIndex, setTimeScaleIndex] = useState(2);
@@ -36,6 +41,32 @@ const MainGame: React.FC = () => {
         const next = (timeScaleIndex + 1) % timeScales.length;
         setTimeScaleIndex(next);
         setStepsPerFrame(timeScales[next]);
+    };
+
+    const focusPlanet = (planet: Planet) => {
+        // Center the camera on the planet
+        offsetX.current = window.innerWidth / 2 - planet.pos.x * zoom.current;
+        offsetY.current = window.innerHeight / 2 - planet.pos.y * zoom.current;
+        
+        setOffsetXDisplay(offsetX.current - window.innerWidth / 2);
+        setOffsetYDisplay(offsetY.current - window.innerHeight / 2);
+    }
+
+    const overPlanet = (worldMouseX: number, worldMouseY: number): number | null => {
+        for (let i = 0; i < simulation.planets.length; i++) {
+            const planet = simulation.planets[i];
+            if (planet.alive) {
+                const dx = worldMouseX - planet.pos.x;
+                const dy = worldMouseY - planet.pos.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const clickRadius = planet.radius / zoom.current;
+
+                if (distance <= clickRadius) {
+                    return i;
+                }
+            }
+        }
+        return null;
     };
 
 
@@ -64,11 +95,19 @@ const MainGame: React.FC = () => {
                     drawPlanet(p5, planet, offsetX.current, offsetY.current, zoom.current);
                 }
 
+                // Update cursor
+                const worldMouseX = (p5.mouseX - offsetX.current) / zoom.current;
+                const worldMouseY = (p5.mouseY - offsetY.current) / zoom.current;
+                const clickedPlanetIndex = overPlanet(worldMouseX, worldMouseY);
+
+                if (clickedPlanetIndex !== null) document.body.style.cursor = 'pointer';
+                else document.body.style.cursor = 'default';
+
+                // Draw border
                 drawBorder(p5);
 
                 setFpsDisplay(p5.frameRate());
             };
-
 
             p5.mousePressed = (event) => {
                 if (event && event.button === 0) { // Left click
@@ -99,9 +138,20 @@ const MainGame: React.FC = () => {
                         window.dispatchEvent(new Event('planetAdded'));
 
                     } else {
-                        isDragging.current = true;
-                        lastMouseX.current = p5.mouseX;
-                        lastMouseY.current = p5.mouseY;
+                        // Check if clicked on a planet
+                        const worldMouseX = (p5.mouseX - offsetX.current) / zoom.current;
+                        const worldMouseY = (p5.mouseY - offsetY.current) / zoom.current;
+                        const clickedPlanetIndex = overPlanet(worldMouseX, worldMouseY);
+
+                        if (clickedPlanetIndex !== null) { // Clicked on a planet
+                            setPlanetInformation(simulation.planets[clickedPlanetIndex]);
+
+                        } else { // Clicked elsewhere
+                            setPlanetInformation(null);
+                            isDragging.current = true;
+                            lastMouseX.current = p5.mouseX;
+                            lastMouseY.current = p5.mouseY;
+                        }
                     }
                 }
             };
@@ -122,6 +172,8 @@ const MainGame: React.FC = () => {
             };
 
             p5.mouseDragged = () => {
+                if (isUserSelectingText() || show) return;
+
                 if (isDragging.current && !isAddingPlanet.current) {
                     const dx = p5.mouseX - lastMouseX.current;
                     const dy = p5.mouseY - lastMouseY.current;
@@ -136,6 +188,8 @@ const MainGame: React.FC = () => {
             };
 
             p5.mouseWheel = (event) => {
+                if (show) return;
+
                 const zoomFactor = 1.08;
                 const wx = (p5.mouseX - offsetX.current) / zoom.current;
                 const wy = (p5.mouseY - offsetY.current) / zoom.current;
@@ -161,18 +215,8 @@ const MainGame: React.FC = () => {
 
         const handleFocusPlanet = (event: Event) => {
             const customEvent = event as CustomEvent;
-            const { planetIndex } = customEvent.detail;
-            
-            if (planetIndex >= 0 && planetIndex < simulation.planets.length) {
-                const planet = simulation.planets[planetIndex];
-
-                // Center the camera on the planet
-                offsetX.current = window.innerWidth / 2 - planet.pos.x * zoom.current;
-                offsetY.current = window.innerHeight / 2 - planet.pos.y * zoom.current;
-                
-                setOffsetXDisplay(offsetX.current - window.innerWidth / 2);
-                setOffsetYDisplay(offsetY.current - window.innerHeight / 2);
-            }
+            const { planet } = customEvent.detail;
+            focusPlanet(planet);
         };
 
         const handleStartAddingPlanet = () => {
@@ -188,7 +232,7 @@ const MainGame: React.FC = () => {
             window.removeEventListener('focusPlanet', handleFocusPlanet);
             window.removeEventListener('startAddingPlanet', handleStartAddingPlanet);
         };
-    }, [stepsPerFrame]);
+    }, [show, stepsPerFrame]);
 
 
     return (
@@ -218,8 +262,18 @@ const MainGame: React.FC = () => {
                 <div>Controls:</div>
                 <div> - Mouse Wheel: Zoom In/Out</div>
                 <div> - Click + Drag: Pan View</div>
-                <div title='Astronomical unit' style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>
-                    Units: 1 AU ≈ {zoomDisplay.toFixed(0)}px
+                <div style={{ display: 'flex', marginTop: 10, alignItems: 'center', gap: 8 }}>
+                    <div title='Open information' style={{ zIndex: 1, display: 'flex', opacity: '80%', cursor: 'pointer' }} onClick={() => {
+                        localStorage.removeItem("informationRead");
+                        setShow(true);
+                    }}>
+                        <svg width="20" height="20" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M256 56C145.72 56 56 145.72 56 256C56 366.28 145.72 456 256 456C366.28 456 456 366.28 456 256C456 145.72 366.28 56 256 56ZM256 138C261.142 138 266.169 139.525 270.445 142.382C274.721 145.239 278.053 149.299 280.021 154.05C281.989 158.801 282.504 164.029 281.5 169.072C280.497 174.116 278.021 178.749 274.385 182.385C270.749 186.021 266.116 188.497 261.072 189.5C256.029 190.504 250.801 189.989 246.05 188.021C241.299 186.053 237.239 182.721 234.382 178.445C231.525 174.169 230 169.142 230 164C230 157.104 232.739 150.491 237.615 145.615C242.491 140.739 249.104 138 256 138ZM304 364H216C211.757 364 207.687 362.314 204.686 359.314C201.686 356.313 200 352.243 200 348C200 343.757 201.686 339.687 204.686 336.686C207.687 333.686 211.757 332 216 332H244V244H228C223.757 244 219.687 242.314 216.686 239.314C213.686 236.313 212 232.243 212 228C212 223.757 213.686 219.687 216.686 216.686C219.687 213.686 223.757 212 228 212H260C264.243 212 268.313 213.686 271.314 216.686C274.314 219.687 276 223.757 276 228V332H304C308.243 332 312.313 333.686 315.314 336.686C318.314 339.687 320 343.757 320 348C320 352.243 318.314 356.313 315.314 359.314C312.313 362.314 308.243 364 304 364Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div title='Astronomical unit' style={{ fontSize: 12, opacity: 0.7 }}>
+                        Units: 1 AU ≈ {zoomDisplay.toFixed(0)}px
+                    </div>
                 </div>
             </div>
 
@@ -263,6 +317,7 @@ const MainGame: React.FC = () => {
                         {fpsDisplay.toFixed(0)} FPS
                     </span>
                 </div>
+
                 <div style={{ position: 'absolute', bottom: 60, right: 35, display: 'flex', gap: 10 }}>
                     <button 
                         title={!simulation.isRunning ? 'Play' : 'Pause'}
@@ -309,11 +364,69 @@ const MainGame: React.FC = () => {
                     <button 
                         title='Change the refresh rate'
                         onClick={nextTimeScale} 
+                        className='select-none'
                         style={{ minWidth: 55 }} 
                     >
                         {timeScales[timeScaleIndex]}x
                     </button>
                 </div>
+                
+                {planetInformation && (
+                    <div className='select-text' style={{ position: 'absolute', bottom: 120, right: 35, display: 'flex', gap: 10 }}>
+                        <div className='planetInformation' style={{ position: 'relative' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                <div 
+                                    className='colorIcon' 
+                                    style={{ background: `rgb(${planetInformation.color.r}, ${planetInformation.color.g}, ${planetInformation.color.b})` }} 
+                                />
+                                <h3 className='select-text' style={{ margin: 0 }}>
+                                    {planetInformation.name}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p>
+                                    Masse:
+                                    <span style={{ fontWeight: 'bold', marginLeft: 5 }}>
+                                        {(planetInformation.baseMass * MASS_DISPLAY_MULTIPLIER).toFixed(2)} ({(planetInformation.baseMass / 3.003489e-6).toFixed(2)}x Earth)
+                                    </span>
+                                </p>
+                                <p>
+                                    Draw radius:
+                                    <span style={{ fontWeight: 'bold', marginLeft: 5 }}>
+                                        {planetInformation.radius} ({(planetInformation.radius / 10).toFixed(2)}x Earth)
+                                    </span>
+                                </p>
+                                <p>
+                                    Position:
+                                    <span style={{ fontWeight: 'bold', marginLeft: 5 }}>
+                                        x={planetInformation.pos.x.toFixed(2)}, y={planetInformation.pos.y.toFixed(2)}
+                                    </span>
+                                </p>
+                                <p>
+                                    Velocity:
+                                    <span style={{ fontWeight: 'bold', marginLeft: 5 }}>
+                                        x={planetInformation.vel.x.toFixed(2)}, y={planetInformation.vel.y.toFixed(2)}
+                                    </span>
+                                </p>
+                            </div>
+{/* 
+                            <div title='Focus planet' style={{ position: 'absolute', cursor: 'pointer', display: 'flex', top: 10, right: 10 }} onClick={() => focusPlanet(planetInformation)}>
+                                <svg width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M304 416V304H416" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M314.199 314.23L431.999 432" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M208 96V208H96" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M197.8 197.77L80 80" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M416 208H304V96" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M314.23 197.8L432 80" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M96 304H208V416" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M197.77 314.199L80 431.999" stroke="white" strokeWidth="32" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <circle cx="255.5" cy="256.5" r="25.5" fill="white"/>
+                                </svg>
+                            </div> */}
+                        </div>
+                    </div>
+                )}
             </motion.div>
 
         </div>

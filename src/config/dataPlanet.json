@@ -2,6 +2,7 @@
     {
         "name": "Sun",
         "color": "#F7D449",
+        "symbol": "⨀",
         "radiusDraw": 25,
         "baseMass": 1.0,
         "orbit": null
@@ -9,6 +10,7 @@
     {
         "name": "Mercury",
         "color": "#B8B4B4",
+        "symbol": "☿",
         "radiusDraw": 6,
         "baseMass": 1.651e-7,
         "orbit": {
@@ -21,6 +23,7 @@
     {
         "name": "Venus",
         "color": "#E9CFA3",
+        "symbol": "♀",
         "radiusDraw": 9,
         "baseMass": 2.447e-6,
         "orbit": {
@@ -33,6 +36,7 @@
     {
         "name": "Earth",
         "color": "#5FA7FA",
+        "symbol": "⊕",
         "radiusDraw": 10,
         "baseMass": 3.003489e-6,
         "orbit": {
@@ -45,6 +49,7 @@
     {
         "name": "Mars",
         "color": "#F96F50",
+        "symbol": "♂",
         "radiusDraw": 7,
         "baseMass": 3.227e-7,
         "orbit": {
@@ -57,6 +62,7 @@
     {
         "name": "Jupiter",
         "color": "#F6A93F",
+        "symbol": "♃",
         "radiusDraw": 20,
         "baseMass": 9.5458e-4,
         "orbit": {
@@ -69,6 +75,7 @@
     {
         "name": "Saturn",
         "color": "#F6C975",
+        "symbol": "♄",
         "radiusDraw": 18,
         "baseMass": 2.858e-4,
         "orbit": {
@@ -81,6 +88,7 @@
     {
         "name": "Uranus",
         "color": "#91CAF6",
+        "symbol": "⛢",
         "radiusDraw": 14,
         "baseMass": 4.366e-5,
         "orbit": {
@@ -93,6 +101,7 @@
     {
         "name": "Neptune",
         "color": "#579BFA",
+        "symbol": "♆",
         "radiusDraw": 14,
         "baseMass": 5.149e-5,
         "orbit": {

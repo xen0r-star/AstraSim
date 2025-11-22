@@ -1,12 +1,10 @@
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
 
 interface PanelContextType {
     isVisible: boolean;
     setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-
 
 export const PanelContext = createContext<PanelContextType | undefined>(undefined);
 

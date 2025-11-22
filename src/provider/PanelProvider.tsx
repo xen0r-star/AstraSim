@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { PanelContext } from '../context/PanelContext';
-
+import { PanelContext } from '../context/panelContext';
 
 
 export const PanelProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {

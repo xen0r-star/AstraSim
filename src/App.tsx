@@ -3,7 +3,7 @@ import ResponsiveContent from './components/device'
 import Information from './components/information'
 import MainGame from './components/MainGame'
 import Mobile from './components/mobile'
-import { PanelProvider } from './provider/PanelProvider'
+import { AppProvider } from './provider/AppProvider'
 
 
 function App() {
@@ -11,11 +11,11 @@ function App() {
         <ResponsiveContent
             desktop={
                 <>
-                    <Information />
-                    <PanelProvider>
+                    <AppProvider>
+                        <Information />
                         <MainGame />
                         <Controls />
-                    </PanelProvider>
+                    </AppProvider>
                 </>
             }
             mobile={

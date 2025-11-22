@@ -8,6 +8,7 @@ export interface OrbitalElements {
 export interface DataPlanet {
     name: string;
     color: string;
+    symbol: string;                 // Unicode character representing the planet
     baseMass: number;               // mass in solar masses
     orbit: OrbitalElements | null;  // null for the Sun
     radiusDraw: number;             // display radius in pixels

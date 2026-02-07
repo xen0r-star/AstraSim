@@ -1,7 +1,7 @@
 import Planet from "./planet";
 import type { DataPlanet } from "../types/dataPlanet";
 import type { Color } from "../types/planet";
-import rawData from "../config/dataPlanet.json" assert { type: "json" };
+import rawData from "../config/dataPlanet.json" with { type: "json" };
 import { computeOrbitalState, alignToBarycenter } from "./orbitUtils";
 import { computeAccelerations, velocityVerletStep } from "./gravity";
 import { hexToRgb } from "../utils/color";

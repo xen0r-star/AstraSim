@@ -1,8 +1,8 @@
 import Controls from './components/Controls'
-import ResponsiveContent from './components/device'
-import Information from './components/information'
+import ResponsiveContent from './components/Device'
+import Information from './components/Information'
 import MainGame from './components/MainGame'
-import Mobile from './components/mobile'
+import Mobile from './components/Mobile'
 import { AppProvider } from './provider/AppProvider'
 
 
